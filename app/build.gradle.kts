@@ -74,4 +74,5 @@ dependencies {
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
     implementation(libs.adapter.rxjava2)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
 }

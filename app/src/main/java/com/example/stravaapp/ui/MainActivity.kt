@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.lifecycleScope
 import com.example.stravaapp.data.viewmodel.StravaViewModel
@@ -22,7 +23,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            HomeScreen(isAuthenticated = isAuthenticated.value) {
+            val athleteStats = viewModel.athleteStats.observeAsState().value
+            HomeScreen(isAuthenticated = isAuthenticated.value, athleteStats = athleteStats) {
                 startStravaOAuth(this)
             }
         }
