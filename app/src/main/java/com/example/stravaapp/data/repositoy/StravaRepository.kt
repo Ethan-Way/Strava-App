@@ -15,7 +15,7 @@ class StravaRepository {
     suspend fun getAccessToken(code: String): String = withContext(Dispatchers.IO) {
         val requestBody = FormBody.Builder()
             .add("client_id", "136979")
-            .add("client_secret", "")
+            .add("client_secret", "d359f071c5a21ebe554c8ec03cc589ccbd8617af")
             .add("code", code)
             .add("grant_type", "authorization_code")
             .add("redirect_uri", "myapp://callback")
