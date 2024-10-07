@@ -1,6 +1,9 @@
 package com.example.stravaapp.data.repositoy
 
 import android.util.Log
+import com.example.stravaapp.data.models.ActivityStats
+import com.example.stravaapp.data.network.StravaApiService
+import com.example.stravaapp.data.network.StravaClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -11,6 +14,7 @@ import java.io.IOException
 class StravaRepository {
 
     private val client = OkHttpClient()
+    private val service = StravaClient.stravaApiService
 
     // Function to get access token
     suspend fun getAccessToken(code: String): String = withContext(Dispatchers.IO) {
@@ -48,6 +52,20 @@ class StravaRepository {
         } catch (e: IOException) {
             Log.e("StravaRepository", "Error getting access token: ${e.message}")
             throw e
+        }
+    }
+
+    // Function to get athlete stats
+    suspend fun getAthleteStats(id: Long, accessToken: String): ActivityStats? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = service.getAthleteStats(id, accessToken).blockingFirst()
+                Log.d("StravaRepository", "Athlete stats fetched successfully: $response")
+                response
+            } catch (e: Exception) {
+                Log.e("StravaRepository", "Error fetching athlete stats: ${e.message}")
+                null
+            }
         }
     }
 }

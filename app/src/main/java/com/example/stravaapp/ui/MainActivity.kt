@@ -8,9 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.lifecycleScope
 import com.example.stravaapp.data.viewmodel.StravaViewModel
 import kotlinx.coroutines.launch
@@ -18,25 +16,28 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: StravaViewModel by viewModels() // ViewModel injection
+    private var isAuthenticated = mutableStateOf(false) // State variable for authentication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            StravaAuthButton { startStravaOAuth(this) }
+            HomeScreen(isAuthenticated = isAuthenticated.value) {
+                startStravaOAuth(this)
+            }
+        }
+
+        // Observe authentication status
+        viewModel.isAuthenticated.observe(this) { onAuth ->
+            if (onAuth) {
+                isAuthenticated.value = true
+            }
         }
 
         // Handle possible OAuth redirect if app was previously opened
         intent?.data?.let { uri ->
             Log.d("MainActivity", "Handling OAuth redirect in onCreate")
             handleOAuthRedirect(uri)
-        }
-    }
-
-    @Composable
-    fun StravaAuthButton(onClick: () -> Unit) {
-        Button(onClick = onClick) {
-            Text(text = "Authorize with Strava")
         }
     }
 
