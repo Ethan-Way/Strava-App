@@ -19,8 +19,19 @@
             android:theme="@style/Theme.StravaApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Scheme for the OAuth redirect URI -->
+                <data
+                    android:host="callback"
+                    android:scheme="myapp" />
             </intent-filter>
         </activity>
     </application>

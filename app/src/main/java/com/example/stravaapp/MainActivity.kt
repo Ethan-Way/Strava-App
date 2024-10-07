@@ -1,47 +1,70 @@
+// MainActivity.kt
 package com.example.stravaapp
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.activity.viewModels
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.stravaapp.ui.theme.StravaAppTheme
+import androidx.lifecycle.lifecycleScope
+import com.example.stravaapp.data.viewmodel.StravaViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: StravaViewModel by viewModels() // ViewModel injection
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
-            StravaAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            StravaAuthButton { startStravaOAuth(this) }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    @Composable
+    fun StravaAuthButton(onClick: () -> Unit) {
+        Button(onClick = onClick) {
+            Text(text = "Authorize with Strava")
+        }
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    StravaAppTheme {
-        Greeting("Android")
+    private fun startStravaOAuth(context: Context) {
+        // Strava OAuth URL
+        val intentUri = Uri.parse("https://www.strava.com/oauth/mobile/authorize")
+            .buildUpon()
+            .appendQueryParameter("client_id", "136979")
+            .appendQueryParameter("redirect_uri", "myapp://callback")
+            .appendQueryParameter("response_type", "code")
+            .appendQueryParameter("approval_prompt", "auto")
+            .appendQueryParameter("scope", "activity:write,read")
+            .build()
+
+        val intent = Intent(Intent.ACTION_VIEW, intentUri)
+        context.startActivity(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        intent.data?.let { uri ->
+            handleOAuthRedirect(uri)
+        }
+    }
+
+    private fun handleOAuthRedirect(uri: Uri) {
+        val code = uri.getQueryParameter("code")
+        if (code != null) {
+            lifecycleScope.launch { // Launch coroutine for API call
+                viewModel.fetchAccessToken(code)
+            }
+        } else {
+            viewModel.onError("Auth code not found")
+        }
     }
 }
