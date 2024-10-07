@@ -39,16 +39,19 @@ fun StravaAuthButton(onClick: () -> Unit) {
 @Composable
 fun DisplayActivityStats(activityStats: ActivityStats) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Biggest Ride Distance: ${activityStats.biggest_ride_distance} m")
-        Text(text = "Biggest Climb Elevation Gain: ${activityStats.biggest_climb_elevation_gain} m")
+        val biggestRideMiles = activityStats.biggest_ride_distance * 0.000621371
+        val biggestClimbFeet = activityStats.biggest_climb_elevation_gain * 3.28084
+        val totalDistanceMiles = activityStats.all_ride_totals.distance * 0.000621371
+        val totalElevationGainFeet = activityStats.all_ride_totals.elevation_gain * 3.28084
+        val totalRides = activityStats.all_ride_totals.count
 
-        // Display recent ride totals
-        Text(text = "Recent Ride Totals:")
-        Text(text = "Count: ${activityStats.recent_ride_totals.count}")
-        Text(text = "Distance: ${activityStats.recent_ride_totals.distance} m")
-        Text(text = "Moving Time: ${activityStats.recent_ride_totals.moving_time} s")
-        // Add more fields as needed...
-
-        // You can also add similar sections for all_run_totals, all_swim_totals, etc.
+        Text(text = "All Ride Totals:")
+        Text(text = "  - Total Rides: $totalRides")
+        Text(text = "  - Total Distance: ${"%.2f".format(totalDistanceMiles)} miles")
+        Text(text = "  - Total Elevation Gain: ${"%.0f".format(totalElevationGainFeet)} feet")
+        Text(text = "  - Biggest Ride Distance: ${"%.2f".format(biggestRideMiles)} miles")
+        Text(text = "  - Biggest Climb Elevation Gain: ${"%.0f".format(biggestClimbFeet)} feet")
     }
 }
+
+

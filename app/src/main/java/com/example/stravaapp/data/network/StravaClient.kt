@@ -9,7 +9,7 @@ object StravaClient {
     private const val BASE_URL = "https://www.strava.com/api/v3/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY // Change to BODY to log request and response bodies
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val client = OkHttpClient.Builder()
@@ -18,10 +18,9 @@ object StravaClient {
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
-        .client(client) // Use the client with the interceptor
+        .client(client)
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // Add RxJava call adapter
-
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
     val stravaApiService: StravaApiService = retrofit.create(StravaApiService::class.java)

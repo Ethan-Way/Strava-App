@@ -6,11 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stravaapp.data.models.ActivityStats
-import com.example.stravaapp.data.network.StravaApiService
 import com.example.stravaapp.data.repositoy.StravaRepository
 import com.example.stravaapp.utils.parseAccessToken
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 
 class StravaViewModel : ViewModel() {
@@ -19,7 +16,7 @@ class StravaViewModel : ViewModel() {
     private var accessToken: String? = null
 
     // LiveData for authentication status
-    private val _isAuthenticated = MutableLiveData<Boolean>(false)
+    private val _isAuthenticated = MutableLiveData(false)
     val isAuthenticated: LiveData<Boolean> get() = _isAuthenticated
 
     // LiveData for athlete stats
@@ -57,6 +54,4 @@ class StravaViewModel : ViewModel() {
     fun onError(message: String) {
         Log.e("StravaViewModel", message)
     }
-
-
 }

@@ -2,7 +2,6 @@ package com.example.stravaapp.data.repositoy
 
 import android.util.Log
 import com.example.stravaapp.data.models.ActivityStats
-import com.example.stravaapp.data.network.StravaApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody

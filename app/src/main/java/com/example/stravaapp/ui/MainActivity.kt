@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
         val code = uri.getQueryParameter("code")
         if (code != null) {
             Log.d("MainActivity", "OAuth code received: $code")
-            lifecycleScope.launch { // Launch coroutine for API call
+            lifecycleScope.launch {
                 viewModel.fetchAccessToken(code)
             }
         } else {
