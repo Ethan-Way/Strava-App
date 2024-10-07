@@ -1,10 +1,10 @@
-// MainActivity.kt
 package com.example.stravaapp
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -24,6 +24,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             StravaAuthButton { startStravaOAuth(this) }
+        }
+
+        // Handle possible OAuth redirect if app was previously opened
+        intent?.data?.let { uri ->
+            Log.d("MainActivity", "Handling OAuth redirect in onCreate")
+            handleOAuthRedirect(uri)
         }
     }
 
@@ -51,6 +57,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        Log.d("MainActivity", "onNewIntent called with data: ${intent.data}")
 
         intent.data?.let { uri ->
             handleOAuthRedirect(uri)
@@ -60,10 +67,12 @@ class MainActivity : ComponentActivity() {
     private fun handleOAuthRedirect(uri: Uri) {
         val code = uri.getQueryParameter("code")
         if (code != null) {
+            Log.d("MainActivity", "OAuth code received: $code")
             lifecycleScope.launch { // Launch coroutine for API call
                 viewModel.fetchAccessToken(code)
             }
         } else {
+            Log.e("MainActivity", "No auth code found in the redirect URI")
             viewModel.onError("Auth code not found")
         }
     }
