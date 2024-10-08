@@ -1,4 +1,4 @@
-# Strava Integration App
+# Strava App
 
 This project is an Android application that integrates with the Strava API to allow users to authenticate via Strava, view their activity statistics, and interact with their Strava data. Built using Jetpack Compose for the UI and a clean architecture approach, this app provides a seamless experience for fetching and displaying authenticated user data from Strava.
 
@@ -30,8 +30,8 @@ This project is an Android application that integrates with the Strava API to al
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/strava-integration-app.git
-   cd strava-integration-app
+   git clone https://github.com/Ethan-Way/Strava-App.git
+   cd Strava-App
    ```
 
 2. **Set Up Strava Credentials**:
