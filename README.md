@@ -54,4 +54,4 @@ The app uses the Strava OAuth flow for authentication:
 
 - **Local Caching**: Implement a Room database to store the user’s stats locally, reducing the need for constant API requests and authentication.
 - **Additional Statistics**: Expand the displayed data to include running and swimming statistics.
-- **Enhanced UI**: Implement pagination or lazy loading for activity data to enhance performance for users with a lot of data.
+- **Enhanced UI**: Implement pagination or lazy loading for activity data to enhance performance for users with a lot of data. Aswell as better overall data display formatting and themes.
